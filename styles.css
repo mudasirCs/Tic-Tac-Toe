@@ -1,0 +1,119 @@
+html,
+body {
+  --bgrClr: #faf1e4;
+  --primaryClr: #cedebd;
+  --secondaryLightClr: #9eb384;
+  --secondaryDarkClr: #435334;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Roboto", sans-serif;
+  color: var(--secondaryDarkClr);
+}
+body {
+  display: grid;
+  grid: 1fr 2fr /1fr;
+  background-image: url("./assets/images/boxes.svg");
+}
+
+body header {
+  display: grid;
+  font-weight: bold;
+  place-items: center;
+  grid: 70px 100px 1fr/100%;
+  gap: 0px;
+  background-color: rgba(118, 118, 118, 0.267);
+}
+
+header h1 {
+  grid-row: 2;
+  font-size: 4rem;
+}
+
+header .options {
+  display: grid;
+  grid-auto-flow: column;
+  width: 60%;
+  gap: 10%;
+  justify-content: center;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+}
+
+.options button {
+  padding: 10px;
+  background-color: var(--bgrClr);
+  color: var(--secondaryDarkClr);
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 15px;
+}
+
+header .scoreboard {
+  display: grid;
+  justify-items: center;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+}
+
+.status {
+  display: grid;
+  justify-items: center;
+}
+
+.status p:first-child {
+  font-size: 2rem;
+}
+
+.status p:last-child {
+  font-size: 4rem;
+}
+
+.selectedPlayer {
+  border: 5px #435334 dotted;
+  border-radius: 50%;
+}
+
+.player img {
+  width: 100px;
+  background-color: var(--bgrClr);
+  border-radius: 50%;
+  height: auto;
+}
+
+.game-container {
+  display: grid;
+  place-content: center;
+  place-items: center;
+}
+
+.gameBoard {
+  width: 370px;
+  height: 370px;
+  border: 10px inset #161e0e6b;
+  background-color: #161e0e6b;
+  display: grid;
+  grid: repeat(3, 1fr) / repeat(3, 1fr);
+  gap: 10px;
+}
+
+/* .board-row {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
+} */
+
+.board-cell {
+  width: 116px;
+  display: grid;
+  place-items: center;
+  height: 116px;
+  color: black;
+  background-color: #fff;
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition animation */
+}
+
+.board-cell:hover {
+  background-color: var(--secondaryLightClr);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
