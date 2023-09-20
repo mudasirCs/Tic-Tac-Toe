@@ -10,6 +10,9 @@ const gameBoard = (() => {
   //   const checkBoardPosition = (x, y, mark) => (gameBoard[x][y] = mark ? 1 : 0);
   const isBoardBlank = () =>
     _gameBoard.every((row) => row.every((cell) => cell === ""));
+  const isBoardFull = () =>
+    _gameBoard.every((row) => row.every((cell) => cell !== ""));
+
   const checkBoardEmpty = (x, y) => (!_gameBoard[x][y] ? true : false);
   const checkBoardWin = () => {
     let mark;
@@ -72,6 +75,7 @@ const gameBoard = (() => {
     getBoardPosition,
     checkBoardEmpty,
     isBoardBlank,
+    isBoardFull,
     checkBoardWin,
     resetBoard,
   };
@@ -186,8 +190,8 @@ const gameInstance = (() => {
   let _gameOver;
   let _winningPlayer;
   let _winner;
+  let _outOfTurns;
 
-  //will use this for init and reset
   function _gameInit() {
     _player1 = createPlayer("P1", "O");
     _player2 = createPlayer("P2", "X");
@@ -201,25 +205,35 @@ const gameInstance = (() => {
   function _resetMatch() {
     const button = document.querySelector(".options button:last-child");
     button.addEventListener("click", () => {
-      _gameBoard.resetBoard();
-      _displayController.renderBoardReset();
-      _gameOver = 0;
-      _displayController.renderNullTurn();
-      _currentPlayerTurn = _randomPlayerTurn();
+      _clearBoard();
+      _resetVariables();
+      _resetPlayers();
       _playTurn();
-      _player1.playerReset();
-      _player2.playerReset();
-      _displayController.renderScore(
-        _player1.getPlayerScore(),
-        _player2.getPlayerScore()
-      );
     });
+  }
+  function _resetVariables() {
+    _gameOver = 0;
+    _outOfTurns = 0;
+    _displayController.renderNullTurn();
+    _currentPlayerTurn = _randomPlayerTurn();
+  }
+  function _clearBoard() {
+    _gameBoard.resetBoard();
+    _displayController.renderBoardReset();
+  }
+  function _resetPlayers() {
+    _player1.playerReset();
+    _player2.playerReset();
+    _displayController.renderScore(
+      _player1.getPlayerScore(),
+      _player2.getPlayerScore()
+    );
   }
   //add _gameOver when all slots filled
   function _gameRematch() {
-    if (_gameOver) {
-      _gameBoard.resetBoard();
-      _displayController.renderBoardReset();
+    if (_gameOver || _outOfTurns) {
+      _clearBoard();
+      _outOfTurns = 0;
       _gameOver = 0;
       _playTurn();
     }
@@ -232,6 +246,7 @@ const gameInstance = (() => {
     });
   }
   //can include option for manual first turn
+  //function has two functionalities randomizes and sets, not gd
   function _randomPlayerTurn() {
     const randomNumber = Math.random();
     if (randomNumber < 0.5) {
@@ -261,6 +276,11 @@ const gameInstance = (() => {
             _gameBoard.fillBoardPosition(x, y, mark);
             e.target.classList.add("cell-clicked");
             _checkGameStatus();
+            if (_outOfTurns) {
+              alert("Draw");
+              _rematch();
+              return;
+            }
             if (_gameOver) {
               alert(`${_gameOver}`);
               _setWinningPlayer(_winner);
@@ -292,6 +312,9 @@ const gameInstance = (() => {
       const { win, mark } = _gameBoard.checkBoardWin();
       _gameOver = win;
       _winner = mark;
+    }
+    if (_gameBoard.isBoardFull()) {
+      _outOfTurns = 1;
     }
   }
   function _setWinningPlayer(mark) {
