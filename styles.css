@@ -57,6 +57,45 @@ header .scoreboard {
   grid-template-columns: repeat(3, minmax(150px, 1fr));
 }
 
+.selectedPlayer {
+  border: 5px solid rgb(104, 207, 104);
+  box-shadow: 0 0 5px rgb(249, 254, 249);
+  transition: all 0.3s ease;
+}
+
+.player {
+  --textBg: #faf1e48d;
+  display: grid;
+  position: relative;
+}
+/* add some code to move it according to width */
+.player p {
+  position: absolute;
+  top: -15%;
+  left: -20%;
+  color: var(--secondaryDarkClr);
+  background-color: var(--textBg);
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.player span {
+  position: absolute;
+  bottom: 0;
+  right: -25%;
+  color: var(--secondaryDarkClr);
+  background-color: var(--textBg);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.player img {
+  width: 100px;
+  background-color: var(--bgrClr);
+  border-radius: 50%;
+  height: auto;
+}
+
 .status {
   display: grid;
   justify-items: center;
@@ -68,19 +107,6 @@ header .scoreboard {
 
 .score-container span {
   font-size: 4rem;
-}
-
-.selectedPlayer {
-  border: 5px solid rgb(104, 207, 104);
-  box-shadow: 0 0 5px rgb(249, 254, 249);
-  transition: all 0.3s ease;
-}
-
-.player img {
-  width: 100px;
-  background-color: var(--bgrClr);
-  border-radius: 50%;
-  height: auto;
 }
 
 .game-container {
@@ -110,6 +136,7 @@ header .scoreboard {
   width: 116px;
   display: grid;
   place-items: center;
+  border-radius: 15px;
   height: 116px;
   color: black;
   background-color: #fff;
@@ -117,13 +144,15 @@ header .scoreboard {
 
 .board-cell,
 .options button {
-  transition: background-color 0.3s, box-shadow 0.3s;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s ease;
+  cursor: pointer;
 }
 
 .board-cell:hover,
 .options button:hover {
   background-color: var(--secondaryLightClr);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  transform: translateY(-3px);
 }
 
 .board-cell:active {
