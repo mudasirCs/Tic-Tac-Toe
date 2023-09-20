@@ -19,7 +19,7 @@ body header {
   display: grid;
   font-weight: bold;
   place-items: center;
-  grid: 70px 100px 1fr/100%;
+  grid: 60px 70px 1fr/100%;
   gap: 0px;
   background-color: rgba(118, 118, 118, 0.267);
 }
@@ -51,6 +51,8 @@ header .options {
 header .scoreboard {
   display: grid;
   justify-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
   grid-auto-flow: column;
   grid-template-columns: repeat(3, minmax(150px, 1fr));
 }
@@ -61,16 +63,17 @@ header .scoreboard {
 }
 
 .status p:first-child {
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
-.status p:last-child {
+.score-container span {
   font-size: 4rem;
 }
 
 .selectedPlayer {
-  border: 5px #435334 dotted;
-  border-radius: 50%;
+  border: 5px solid rgb(104, 207, 104);
+  box-shadow: 0 0 5px rgb(249, 254, 249);
+  transition: all 0.3s ease;
 }
 
 .player img {
@@ -110,10 +113,24 @@ header .scoreboard {
   height: 116px;
   color: black;
   background-color: #fff;
-  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition animation */
 }
 
-.board-cell:hover {
+.board-cell,
+.options button {
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.board-cell:hover,
+.options button:hover {
   background-color: var(--secondaryLightClr);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.board-cell:active {
+  background-color: var(--secondaryDarkClr);
+}
+
+.cell-clicked {
+  background-color: var(--secondaryLightClr);
+  transition: background-color 0.3s;
 }
