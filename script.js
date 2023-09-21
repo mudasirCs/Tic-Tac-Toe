@@ -63,7 +63,6 @@ const gameBoard = (() => {
         }
       }
     }
-
     /* 
     X X X
     X X X

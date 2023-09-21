@@ -11,7 +11,7 @@ body {
 }
 body {
   display: grid;
-  grid: 1fr 2fr /1fr;
+  grid: 1fr 2fr 30px/1fr;
   background-image: url("./assets/images/boxes.svg");
 }
 
@@ -135,6 +135,7 @@ header .scoreboard {
 .board-cell {
   width: 116px;
   display: grid;
+  font-size: 3rem;
   place-items: center;
   border-radius: 15px;
   height: 116px;
@@ -168,4 +169,18 @@ header .scoreboard {
   font-size: 3.5rem;
   background-color: #ffeb3b !important;
   box-shadow: 0 0 10px rgba(255, 235, 59, 0.7) !important; /* Add a glow effect */
+}
+
+.footer {
+  text-align: center;
+  display: grid;
+  place-content: center;
+  background-color: #9eb38498;
+}
+
+.footer a {
+  font-size: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--secondaryDarkClr);
 }
