@@ -329,16 +329,16 @@ const gameInstance = (() => {
             // _displayController.renderSelectBox(x, y, mark);
             e.target.classList.add("cell-clicked");
             _checkGameStatus();
-            if (_outOfTurns) {
-              alert("Draw");
-              _rematch();
-              return;
-            }
             if (_gameOver) {
               _displayController.renderBoardUpdate();
               // _displayController.renderBoardReset();
               // _displayController.renderBoardUpdate();
               _finishGame();
+              return;
+            }
+            if (_outOfTurns) {
+              alert("Draw");
+              _rematch();
               return;
             }
             _turnToggle();
