@@ -163,3 +163,9 @@ header .scoreboard {
   background-color: var(--secondaryLightClr);
   transition: background-color 0.3s;
 }
+
+.winner-cell {
+  font-size: 3.5rem;
+  background-color: #ffeb3b !important;
+  box-shadow: 0 0 10px rgba(255, 235, 59, 0.7) !important; /* Add a glow effect */
+}

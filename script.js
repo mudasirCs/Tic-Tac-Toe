@@ -14,6 +14,25 @@ const gameBoard = (() => {
     _gameBoard.every((row) => row.every((cell) => cell !== ""));
 
   const checkBoardEmpty = (x, y) => (!_gameBoard[x][y] ? true : false);
+  const _markWinningStreak = (direction, lineNumber) => {
+    if (direction === "row") {
+      for (let i = 0; i < _gameBoard[lineNumber].length; i++) {
+        _gameBoard[lineNumber][i] = "👑";
+      }
+    } else if (direction === "column") {
+      for (let i = 0; i < _gameBoard.length; i++) {
+        _gameBoard[i][lineNumber] = "👑";
+      }
+    } else if (direction === "diagonal") {
+      for (let i = 0; i < _gameBoard.length; i++) {
+        _gameBoard[i][i] = "👑";
+      }
+    } else if (direction === "anti-diagonal") {
+      for (let i = 0; i < _gameBoard.length; i++) {
+        _gameBoard[i][2 - i] = "👑";
+      }
+    }
+  };
   const checkBoardWin = () => {
     let mark;
     let streak = 0;
@@ -26,7 +45,10 @@ const gameBoard = (() => {
           (streak, val) => (val === mark ? streak + 1 : 0),
           0
         );
-        if (streak === 3) return { win: 1, mark };
+        if (streak === 3) {
+          _markWinningStreak("row", i);
+          return { win: 1, mark };
+        }
       }
 
       mark = _gameBoard[0][i];
@@ -35,10 +57,18 @@ const gameBoard = (() => {
           (streak, val) => (val[i] === mark ? streak + 1 : 0),
           0
         );
-        if (streak === 3) return { win: 1, mark };
+        if (streak === 3) {
+          _markWinningStreak("column", i);
+          return { win: 1, mark };
+        }
       }
     }
 
+    /* 
+    X X X
+    X X X
+    X X X
+    */
     // Check diagonal and anti-diagonal
     mark = _gameBoard[0][0];
     if (mark !== "") {
@@ -46,7 +76,10 @@ const gameBoard = (() => {
         (streak, val, index) => (val[index] === mark ? streak + 1 : 0),
         0
       );
-      if (streak === 3) return { win: 1, mark };
+      if (streak === 3) {
+        _markWinningStreak("diagonal", 0);
+        return { win: 1, mark };
+      }
     }
 
     mark = _gameBoard[0][2];
@@ -55,7 +88,10 @@ const gameBoard = (() => {
         (streak, val, index) => (val[2 - index] === mark ? streak + 1 : 0),
         0
       );
-      if (streak === 3) return { win: 1, mark };
+      if (streak === 3) {
+        _markWinningStreak("anti-diagonal", 2);
+        return { win: 1, mark };
+      }
     }
 
     return { win: 0, mark: "" };
@@ -127,6 +163,20 @@ const displayController = (() => {
     }
   };
 
+  const renderBoardUpdate = () => {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        const boardCell = document.querySelector(
+          `div[data-x="${i}"][data-y="${j}"]`
+        );
+        let mark = _boardArray.getBoardPosition(i, j);
+        if (mark == "👑") {
+          boardCell.classList.add("winner-cell");
+        }
+        boardCell.innerText = mark;
+      }
+    }
+  };
   const renderBoardReset = () => {
     const boardCells = document.querySelectorAll(".gameBoard .board-cell");
     boardCells.forEach((cell) => {
@@ -172,6 +222,7 @@ const displayController = (() => {
 
   return {
     renderBoard,
+    renderBoardUpdate,
     renderBoardReset,
     renderPlayers,
     renderSetTurn,
@@ -265,15 +316,18 @@ const gameInstance = (() => {
     const boardCells = document.querySelectorAll(".gameBoard .board-cell");
     boardCells.forEach((val) => {
       val.addEventListener("click", (e) => {
-        if (e.target.innerText == "") {
+        const x = parseInt(e.target.getAttribute("data-x"));
+        const y = parseInt(e.target.getAttribute("data-y"));
+        if (_gameBoard.getBoardPosition(x, y) == "") {
           if (_gameOver) return;
-          const x = parseInt(e.target.getAttribute("data-x"));
-          const y = parseInt(e.target.getAttribute("data-y"));
 
           if (_gameBoard.checkBoardEmpty(x, y)) {
             let mark = _currentPlayerTurn.getPlayerMark();
-            _displayController.renderSelectBox(x, y, mark);
             _gameBoard.fillBoardPosition(x, y, mark);
+            _displayController.renderBoardUpdate();
+            // its better to refresh board every turn in case of messing
+            // around with DOM by players
+            // _displayController.renderSelectBox(x, y, mark);
             e.target.classList.add("cell-clicked");
             _checkGameStatus();
             if (_outOfTurns) {
@@ -282,11 +336,10 @@ const gameInstance = (() => {
               return;
             }
             if (_gameOver) {
-              alert(`${_gameOver}`);
-              _setWinningPlayer(_winner);
-              _showWinnerPlayer(_winner);
-              _updateScore();
-              _rematch();
+              _displayController.renderBoardUpdate();
+              // _displayController.renderBoardReset();
+              // _displayController.renderBoardUpdate();
+              _finishGame();
               return;
             }
             _turnToggle();
@@ -298,6 +351,14 @@ const gameInstance = (() => {
         }
       });
     });
+  }
+
+  function _finishGame() {
+    alert(`${_gameOver}`);
+    _setWinningPlayer(_winner);
+    _showWinnerPlayer(_winner);
+    _updateScore();
+    _rematch();
   }
 
   function _updateScore() {
@@ -336,4 +397,3 @@ const gameInstance = (() => {
 })();
 
 gameInstance.playGame();
-// gameInstance.test();
